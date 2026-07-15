@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>코인 핫이슈</title>
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./icon-192.png" />
+<link rel="apple-touch-icon" href="./icon-192.png" />
+<meta name="theme-color" content="#3a1512" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo">🔔</div>
+    <h1>코인 핫이슈</h1>
+    <button class="icon-btn" id="settings-btn" title="설정">⚙️</button>
+  </div>
+  <div class="subtitle">서버 없이 브라우저에서 직접 불러와요. 앱을 열어둔 동안 자동으로 갱신됩니다.</div>
+
+  <div id="price-section">
+    <div class="section-heading">가격</div>
+    <div class="price-strip" id="price-strip"></div>
+    <div class="alert-list" id="price-surge-list" style="margin-top: 10px"></div>
+  </div>
+
+  <div id="trend-section">
+    <div class="section-heading">검색 트렌드</div>
+    <div class="alert-list" id="trend-list"></div>
+  </div>
+
+  <div id="whale-section">
+    <div class="section-heading">고래 거래</div>
+    <div class="alert-list" id="whale-list"></div>
+  </div>
+
+  <div class="footer-row">
+    <button class="refresh-btn" id="refresh-btn">새로고침</button>
+  </div>
+  <div class="hint">
+    <span id="updated-at"></span><br />
+    브라우저 메뉴에서 "홈 화면에 추가"를 누르면 앱처럼 사용할 수 있어요.
+  </div>
+</div>
+
+<div class="modal-overlay" id="settings-overlay">
+  <div class="modal-sheet">
+    <h3>설정</h3>
+
+    <label class="setting-row"><input type="checkbox" id="src-price" /> 가격 급등락</label>
+    <div class="setting-sub">변동 임계값 <input type="number" id="price-threshold" step="0.5" min="0.5" /> %</div>
+
+    <label class="setting-row"><input type="checkbox" id="src-trend" /> 검색 트렌드</label>
+    <div class="setting-sub">상위 <input type="number" id="trend-topn" step="1" min="1" max="10" /> 위 이내</div>
+
+    <label class="setting-row"><input type="checkbox" id="src-whale" /> 고래 거래</label>
+    <div class="setting-sub">BTC <input type="number" id="whale-threshold" step="1" min="1" /> 개 이상</div>
+
+    <div class="modal-actions">
+      <button class="cancel-btn" id="settings-cancel">취소</button>
+      <button class="save-btn" id="settings-save">저장</button>
+    </div>
+  </div>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
