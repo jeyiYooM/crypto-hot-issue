@@ -56,15 +56,32 @@ function fmtTime(date) {
 
 // ---------- Price ----------
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchCandlesWithRetry(market, attempts = 2) {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(`https://api.upbit.com/v1/candles/minutes/5?market=${market}&count=12`);
+      if (!res.ok) throw new Error("http " + res.status);
+      const candles = await res.json();
+      if (!Array.isArray(candles) || candles.length === 0) throw new Error("empty");
+      return candles;
+    } catch (e) {
+      if (i === attempts - 1) throw e;
+      await sleep(400 * (i + 1));
+    }
+  }
+}
+
 async function fetchPriceData(settings) {
   const results = [];
   for (const coin of settings.coins) {
     const market = UPBIT_MARKETS[coin];
     if (!market) continue;
     try {
-      const res = await fetch(`https://api.upbit.com/v1/candles/minutes/5?market=${market}&count=12`);
-      const candles = await res.json();
-      if (!Array.isArray(candles) || candles.length === 0) throw new Error("empty");
+      const candles = await fetchCandlesWithRetry(market);
       const latest = candles[0].trade_price;
       const oldest = candles[candles.length - 1].trade_price;
       const pct = oldest ? ((latest - oldest) / oldest) * 100 : 0;
@@ -72,6 +89,7 @@ async function fetchPriceData(settings) {
     } catch (e) {
       results.push({ coin, ok: false });
     }
+    await sleep(150); // small stagger between coins to avoid bursting the public API
   }
   return results;
 }
